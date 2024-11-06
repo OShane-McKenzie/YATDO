@@ -1,0 +1,1 @@
+const val appName:String = "YATDO"
