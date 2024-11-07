@@ -166,7 +166,7 @@ fun TaskComponent(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.Start
                     ) {
-                        Text(derivedTask.title, fontSize = 21.sp, modifier = Modifier.basicMarquee())
+                        Text(derivedTask.title, fontSize = 25.sp, fontWeight = FontWeight.Bold,modifier = Modifier.basicMarquee())
                     }
                     ////////////////////////////////
 

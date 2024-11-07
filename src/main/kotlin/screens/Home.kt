@@ -4,6 +4,7 @@ package screens
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import components.*
 import contentProvider
 import contentRepository
+import getDateAsString
 import ifNotNull
 import ifNull
 import kotlinx.coroutines.delay
@@ -65,7 +67,12 @@ fun Home(modifier: Modifier = Modifier){
         contentProvider.tasks.value
     ) }
     var taskListController by rememberSaveable { mutableStateOf(0) }
-    LaunchedEffect(Unit, contentProvider.tasks.value, taskListController){
+    var filterText by remember { mutableStateOf("") }
+    var showMenu by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(taskListController, contentProvider.tasks.value){
         filteredTasks = emptyList()
         delay(20)
         filteredTasks = contentProvider.tasks.value
@@ -107,47 +114,67 @@ fun Home(modifier: Modifier = Modifier){
                 }
             }
 
+            //Should probably use a LazyColumn for this
             Column(
                 modifier = Modifier.fillMaxWidth().wrapContentHeight().verticalScroll(scrollState)
             ) {
                 Spacer(modifier = Modifier.height(YatdoDataTypes.Fibonacci.TWENTY_ONE.dp))
                 filteredTasks.sortedWith(compareBy<TaskModel> { it.groupId }.thenBy { it.deadline }).forEach { task ->
-                    TaskComponent(
-                        modifier = Modifier.fillMaxWidth(),
-                        task,
-                        onInlineEdit = {
-                                callbackTask->
-                            callbackTask.ifNotNull { it->
-                                val foundTask = contentProvider.tasks.value.find { tk->
-                                    tk.id == it.id
-                                }
-                                foundTask
-                                    .ifNotNull { fk ->
-                                        val tasks = contentProvider.tasks.value.toMutableList()
-                                        val index = tasks.indexOf(fk)
-                                        tasks[index] = it
-                                        contentProvider.tasks.value = tasks.toList()
-                                        contentRepository.updateTask(taskPath = TaskPath(it.id, path = Path.database), data = it)
-                                    }
-                                    .ifNull {
-                                        val tasks = contentProvider.tasks.value.toMutableList()
-                                        tasks.add(it)
-                                        contentProvider.tasks.value = tasks.toList()
-                                        contentRepository.updateTask(taskPath = TaskPath(it.id, path = Path.database), data = it)
-                                    }
-                            }
-                        },
-                        onDelete = {
-                            selectedTask = it
-                            showDeleteTaskDialog = true
-                        },
-                        showArchivedTask = showArchivedTasks
+                    if(
+                        task.title.contains(filterText, ignoreCase = true) ||
+                        task.description.contains(filterText, ignoreCase = true) ||
+                        task.state.contains(filterText, ignoreCase = true) ||
+                        task.status.contains(filterText, ignoreCase = true) ||
+                        task.category.contains(filterText, ignoreCase = true) ||
+                        task.deadline?.getDateAsString()?.contains(filterText, ignoreCase = true) != false ||
+                        task.groupId.contains(filterText, ignoreCase = true)
                     ) {
-                        creationType = CreationType.EDIT
-                        selectedTask = it
-                        showTaskCreator = true
+                        TaskComponent(
+                            modifier = Modifier.fillMaxWidth(),
+                            task,
+                            onInlineEdit = { callbackTask ->
+                                callbackTask.ifNotNull { it ->
+                                    val foundTask = contentProvider.tasks.value.find { tk ->
+                                        tk.id == it.id
+                                    }
+                                    foundTask
+                                        .ifNotNull { fk ->
+                                            val tasks = contentProvider.tasks.value.toMutableList()
+                                            val index = tasks.indexOf(fk)
+                                            tasks[index] = it
+                                            contentProvider.tasks.value = tasks.toList()
+                                            contentRepository.updateTask(
+                                                taskPath = TaskPath(
+                                                    it.id,
+                                                    path = Path.database
+                                                ), data = it
+                                            )
+                                        }
+                                        .ifNull {
+                                            val tasks = contentProvider.tasks.value.toMutableList()
+                                            tasks.add(it)
+                                            contentProvider.tasks.value = tasks.toList()
+                                            contentRepository.updateTask(
+                                                taskPath = TaskPath(
+                                                    it.id,
+                                                    path = Path.database
+                                                ), data = it
+                                            )
+                                        }
+                                }
+                            },
+                            onDelete = {
+                                selectedTask = it
+                                showDeleteTaskDialog = true
+                            },
+                            showArchivedTask = showArchivedTasks
+                        ) {
+                            creationType = CreationType.EDIT
+                            selectedTask = it
+                            showTaskCreator = true
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
                 }
 
             }
@@ -162,15 +189,31 @@ fun Home(modifier: Modifier = Modifier){
                 contentDescription = ""
             )
         }
+
+        SimpleAnimator(
+            isVisible = showMenu,
+            style = AnimationStyle.LEFT,
+            modifier = Modifier.align(Alignment.TopStart)
+        ) {
+            NavigationMenu(
+                modifier = Modifier.align(Alignment.TopStart). fillMaxWidth(0.3f).fillMaxHeight()
+            ) {
+                filterText = it
+            }
+        }
+
         IconButton(
-            onClick = {},
+            onClick = {showMenu = !showMenu},
             modifier = Modifier.align(Alignment.TopStart).size(YatdoDataTypes.Fibonacci.FIFTY_FIVE.dp)){
             Icon(
-                modifier = Modifier.size(YatdoDataTypes.Fibonacci.FIFTY_FIVE.dp),
+                modifier = Modifier.size(YatdoDataTypes.Fibonacci.FIFTY_FIVE.dp)
+                    .background(color = Color.Black.copy(alpha = 0.6f), shape = CircleShape),
                 imageVector = Icons.Default.Menu,
+                tint = Color.White,
                 contentDescription = "Menu"
             )
         }
+
         SimpleAnimator(
             modifier = Modifier.align(Alignment.Center),
             isVisible = showTaskCreator,
