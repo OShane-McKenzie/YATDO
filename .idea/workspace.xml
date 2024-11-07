@@ -4,7 +4,43 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4ed1677f-4c7c-4217-a4ea-746b6fc64707" name="Changes" comment="" />
+    <list default="true" id="4ed1677f-4c7c-4217-a4ea-746b6fc64707" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Samples.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Samples.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Utlis.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Utlis.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/components/ColumnText.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/components/ColumnText.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/components/CustomSnackBar.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/components/CustomSnackBar.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/components/DateTimeComponent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/components/DateTimeComponent.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/components/SimpleAnimator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/components/SimpleAnimator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/components/TaskComponent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/components/TaskComponent.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/components/TaskCreator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/components/TaskCreator.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/components/TitleText.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/components/TitleText.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/models/FileListOptions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/models/FileListOptions.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/models/TaskModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/models/TaskModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/models/TaskPath.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/models/TaskPath.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/nativeLibs/NativeLibInterfaces.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/nativeLibs/NativeLibInterfaces.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/nativeLibs/NativeSysCalls.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/nativeLibs/NativeSysCalls.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/AnimationStyle.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/AnimationStyle.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/ContentProvider.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/ContentProvider.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/ContentRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/ContentRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/CreationType.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/CreationType.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/DataSource.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/DataSource.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/Database.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/Database.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/DateUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/DateUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/HasId.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/HasId.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/NotificationIcons.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/NotificationIcons.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/NotificationSounds.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/NotificationSounds.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/Path.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/Path.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/StandardLibs.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/StandardLibs.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/State.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/State.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/Status.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/Status.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/YatdoDataTypes.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/YatdoDataTypes.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/screens/Home.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/screens/Home.kt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,25 +51,92 @@
       <ProjectState />
     </projectState>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin Interface" />
+        <option value="Kotlin Data Class" />
+        <option value="Kotlin Class" />
+        <option value="Kotlin Object" />
+        <option value="Kotlin Enum" />
+        <option value="Kotlin File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "OShane-McKenzie"
+  }
 }]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/OShane-McKenzie/YATDO.git",
+    "accountId": "8d968f3c-8cad-42df-ab33-9bad3b4e5157"
+  }
+}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2oDz3knRzmYRVGFNNLukPMQiXMs" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Gradle.Build YATDO.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;Kotlin.MainKt.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/lite/IdeaProjects/YATDO/resources&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;kotlin-gradle-user-dirs&quot;: [
+      &quot;/home/lite/.gradle&quot;
+    ]
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources" />
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
+    </key>
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="objects" />
+      <recent name="enums" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Kotlin.MainKt">
+    <configuration name="MainKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="MainKt" />
+      <module name="YATDO.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Kotlin.MainKt" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -44,5 +147,8 @@
       <updated>1730418738097</updated>
     </task>
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>
