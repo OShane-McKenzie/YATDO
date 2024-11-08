@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import contentProvider
 import getDateAsString
 import getDeadlineAsString
 import kotlinx.coroutines.delay
@@ -60,18 +61,28 @@ fun TaskComponent(
         mutableStateOf("")
     }
     val scope = rememberCoroutineScope()
+
     LaunchedEffect(Unit, taskStateChange){
-        if(taskStateChange == Int.MAX_VALUE-1) taskStateChange = 0
+        if(taskStateChange == Int.MAX_VALUE-1) taskStateChange = 1
         if(derivedTask.isArchived) {
             progressColor = Color.Gray
+            if(taskStateChange>0){
+                onInlineEdit.invoke(derivedTask)
+            }
             return@LaunchedEffect
         }
         if(derivedTask.progress >= 1f){
             derivedTask.state = State.COMPLETED
+            if(derivedTask.completedAt == null){
+                derivedTask.completedAt = System.currentTimeMillis()
+            }
         }else if(derivedTask.state != State.NOT_STARTED && derivedTask.state != State.PAUSED && derivedTask.progress < 1f){
             derivedTask.state = State.IN_PROGRESS
         }
-        derivedTask.status = derivedTask.calculateStatus()
+        if(derivedTask.state != State.PAUSED){
+            derivedTask.status = derivedTask.calculateStatus()
+        }
+
 
         progressColor = when (derivedTask.state) {
             State.COMPLETED -> {
@@ -79,6 +90,9 @@ fun TaskComponent(
             }
             State.PAUSED -> {
                 Color.Gray
+            }
+            State.NOT_STARTED-> {
+                Color(0xff000000)
             }
             else -> {
                 when(derivedTask.status){
@@ -94,30 +108,48 @@ fun TaskComponent(
             progressPercentage = (derivedTask.progress * 100f)
         }
 
+        if(taskStateChange>0){
+            onInlineEdit.invoke(derivedTask)
+        }
     }
 
     LaunchedEffect(true){
+        if(derivedTask.state == State.PAUSED){
+            return@LaunchedEffect
+        }
         scope.launch {
             delay(2000)
+
             when(derivedTask.status){
                 Status.AT_RISK ->{
-                    nativeSysCalls.sendNotification(
-                        title = "${derivedTask.title} - AT RISK",
-                        body = "${derivedTask.title} is due ${derivedTask.deadline?.getDateAsString(includeTime = true)}\nand is at risk of becoming overdue.",
-                        icon = NotificationIcons.DIALOG_WARNING,
-                        sound = NotificationSounds.WARNING
-                    ){
-                        nativeSysCalls.cleanup()
+                    if(derivedTask.id !in contentProvider.atRiskTaskNotificationTracker){
+                        nativeSysCalls.sendNotification(
+                            title = "${derivedTask.title} - AT RISK",
+                            body = "${derivedTask.title} is due ${derivedTask.deadline?.getDateAsString(includeTime = true)}\nand is at risk of becoming overdue at the current rate.",
+                            icon = NotificationIcons.DIALOG_WARNING,
+                            sound = NotificationSounds.WARNING
+                        ){
+                            nativeSysCalls.cleanup()
+                        }
+                        contentProvider.atRiskTaskNotificationTracker.add(derivedTask.id)
                     }
+
                 }
                 Status.OVERDUE ->{
-                    nativeSysCalls.sendNotification(
-                        title = "${derivedTask.title} - OVERDUE",
-                        body = "${derivedTask.title} is now overdue ${derivedTask.deadline?.getDateAsString(includeTime = true)}\nand is ${derivedTask.getDaysBehindSchedule()} days behind schedule.",
-                        icon = NotificationIcons.DIALOG_WARNING,
-                        sound = NotificationSounds.WARNING
-                    ){
-                        nativeSysCalls.cleanup()
+                    if(derivedTask.id !in contentProvider.overdueTaskNotificationTracker) {
+                        nativeSysCalls.sendNotification(
+                            title = "${derivedTask.title} - OVERDUE",
+                            body = "${derivedTask.title} is now overdue ${
+                                derivedTask.deadline?.getDateAsString(
+                                    includeTime = true
+                                )
+                            }\nand is ${derivedTask.getDaysBehindSchedule()} days behind schedule.",
+                            icon = NotificationIcons.DIALOG_WARNING,
+                            sound = NotificationSounds.WARNING
+                        ) {
+                            nativeSysCalls.cleanup()
+                        }
+                        contentProvider.overdueTaskNotificationTracker.add(derivedTask.id)
                     }
                 }
             }
@@ -129,6 +161,13 @@ fun TaskComponent(
             Modifier.wrapContentHeight()
         }else{
             Modifier.height(YatdoDataTypes.Fibonacci.EIGHTY_NINE.dp)
+        }
+    }
+    LaunchedEffect(contentProvider.taskUpdater.value){
+        if(derivedTask.isArchived) {
+            return@LaunchedEffect
+        }else{
+            taskStateChange++
         }
     }
     val gradientBackground = Brush.verticalGradient(
@@ -167,6 +206,10 @@ fun TaskComponent(
                         horizontalAlignment = Alignment.Start
                     ) {
                         Text(derivedTask.title, fontSize = 25.sp, fontWeight = FontWeight.Bold,modifier = Modifier.basicMarquee())
+                        if(derivedTask.status == Status.AT_RISK && isTaskBarExpanded) {
+                            Text("${derivedTask.title} is due ${derivedTask.deadline?.getDateAsString(includeTime = true)}\nand is at risk of becoming overdue at the current rate.",
+                                color = progressColor, fontSize = 21.sp, fontWeight = FontWeight.Bold)
+                        }
                     }
                     ////////////////////////////////
 
@@ -189,40 +232,48 @@ fun TaskComponent(
                                 derivedTask.description,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                fontSize = 21.sp
+                                fontSize = 18.sp
                             )
                         } else {
                             Text(
                                 "Date created: ${derivedTask.createdAt.getDateAsString(includeTime = true) ?: ""}",
-                                fontSize = 21.sp,
+                                fontSize = 18.sp,
                                 modifier = Modifier.basicMarquee(),
                                 maxLines = 1
                             )
                             Text(
                                 "Date completed: ${derivedTask.completedAt?.getDateAsString() ?: "Pending"}",
-                                fontSize = 21.sp,
+                                fontSize = 18.sp,
                                 modifier = Modifier.basicMarquee(),
                                 maxLines = 1
                             )
                             Text(
                                 "Group: ${derivedTask.groupId}",
-                                fontSize = 21.sp,
+                                fontSize = 18.sp,
                                 modifier = Modifier.basicMarquee(),
                                 maxLines = 1
                             )
                             Text(
                                 "Recommended Progress Rate: ${"%.2f".format((derivedTask.getRequiredDailyProgress() ?: 0f) * 100f)}% per day",
-                                fontSize = 21.sp,
+                                fontSize = 18.sp,
                                 modifier = Modifier.basicMarquee(),
                                 maxLines = 1
                             )
                             if ((derivedTask.status == Status.AT_RISK || derivedTask.status == Status.OVERDUE) && derivedTask.state != State.PAUSED) {
                                 Text(
-                                    "Days behind: ${"%.2f".format(derivedTask.getDaysBehindSchedule())}".replace("-",""),
-                                    fontSize = 21.sp,
+                                    "Days behind schedule: ${"%.2f".format(derivedTask.getDaysBehindSchedule())}".replace("-",""),
+                                    fontSize = 18.sp,
                                     modifier = Modifier.basicMarquee(),
                                     maxLines = 1,
                                     color = Color.Red
+                                )
+
+                                Text(
+                                    "Days overdue: ${"%.0f".format(derivedTask.getDaysOverdue()?:0f)}",
+                                    fontSize = 18.sp,
+                                    modifier = Modifier.basicMarquee(),
+                                    maxLines = 1,
+                                    color = if ((derivedTask.getDaysOverdue() ?: 0f) > 0f) Color.Red else Color.Black
                                 )
                             }
                             Text("")
@@ -248,7 +299,8 @@ fun TaskComponent(
                         Text(
                             derivedTask.getDeadlineAsString(includeTime = true) ?: Status.NO_DEADLINE,
                             fontSize = 21.sp,
-                            modifier = Modifier.basicMarquee()
+                            modifier = Modifier.basicMarquee(),
+                            fontWeight = FontWeight.ExtraBold
                         )
                     }
                     /////////////////////////////////
@@ -285,7 +337,6 @@ fun TaskComponent(
                         )
                     }
                     /////////////////////////////////
-
                 }
 
                 if (isTaskBarExpanded) {
@@ -304,7 +355,7 @@ fun TaskComponent(
                                     derivedTask.state = State.IN_PROGRESS
                                     derivedTask.status = derivedTask.calculateStatus()
                                     taskStateChange++
-                                    onInlineEdit.invoke(derivedTask)
+
                                 } else {
                                     info = "The task has already begun and is currently ${derivedTask.state}"
                                     showSnackBar = true
@@ -327,15 +378,15 @@ fun TaskComponent(
                                 if (derivedTask.state == State.IN_PROGRESS && derivedTask.progress < 1f) {
                                     derivedTask.state = State.PAUSED
                                     taskStateChange++
-                                    onInlineEdit.invoke(derivedTask)
+
                                 } else if (derivedTask.state == State.PAUSED && derivedTask.progress < 1f) {
                                     derivedTask.state = State.IN_PROGRESS
                                     taskStateChange++
-                                    onInlineEdit.invoke(derivedTask)
+
                                 } else if (derivedTask.progress >= 1f) {
                                     derivedTask.state = State.COMPLETED
                                     taskStateChange++
-                                    onInlineEdit.invoke(derivedTask)
+
                                 }
                             },
                             enabled = !derivedTask.isArchived
@@ -356,7 +407,6 @@ fun TaskComponent(
                                     derivedTask.status = derivedTask.calculateStatus()
                                 }
                                 taskStateChange++
-                                onInlineEdit.invoke(derivedTask)
                             }
                         ) {
                             Text(if(derivedTask.isArchived) "Unarchive Task" else "Archive task", fontSize = 21.sp)
@@ -378,7 +428,7 @@ fun TaskComponent(
                                         task.progress = progress
                                         taskStateChange++
                                         progressUpdate = ""
-                                        onInlineEdit.invoke(derivedTask)
+
                                     }
                                 }) {
                                     Text("Update")
@@ -390,8 +440,8 @@ fun TaskComponent(
                             onClick = {
                                 if (derivedTask.state != State.COMPLETED) {
                                     derivedTask.progress = 1f
+                                    derivedTask.completedAt = System.currentTimeMillis()
                                     taskStateChange++
-                                    onInlineEdit.invoke(derivedTask)
                                 }
                             },
                             enabled = !derivedTask.isArchived
@@ -407,7 +457,6 @@ fun TaskComponent(
                         }
                     }
                 }
-
             }
 
             Row(
@@ -445,10 +494,26 @@ fun TaskComponent(
             Spacer(modifier = Modifier.height(YatdoDataTypes.Fibonacci.TWENTY_ONE.dp).align(Alignment.BottomCenter))
         }
     }
-    if(showArchivedTask && derivedTask.isArchived) {
-        taskBody()
-    }else if(!derivedTask.isArchived){
-        taskBody()
+    if(derivedTask.isArchived) {
+        SimpleAnimator(
+            isVisible = showArchivedTask,
+            style = AnimationStyle.DOWN
+        ) {
+            Column{
+                taskBody()
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+        }
+
+    }else {
+        SimpleAnimator(
+            style = AnimationStyle.DOWN
+        ) {
+            Column{
+                taskBody()
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+        }
     }
 
 }

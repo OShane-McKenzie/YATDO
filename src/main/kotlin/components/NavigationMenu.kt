@@ -7,10 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.LocalTextStyle
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -18,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import objects.Controller
 import objects.YatdoDataTypes
 
 @Composable
@@ -26,6 +24,7 @@ fun NavigationMenu(modifier:Modifier = Modifier, onSearch:(String)->Unit={}){
         mutableStateOf("")
     }
     val interactionSource = remember { MutableInteractionSource() }
+    var isShowArchivedTask by remember { mutableStateOf(false) }
     Box(
         modifier = modifier
     ){
@@ -61,6 +60,27 @@ fun NavigationMenu(modifier:Modifier = Modifier, onSearch:(String)->Unit={}){
                 placeholder = { Text("Search Tasks", fontSize = 25.sp, color = Color.White) },
                 modifier = Modifier.fillMaxWidth(0.7f).height(60.dp)
             )
+
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    modifier = Modifier.size(34.dp),
+                    checked = Controller.showArchivedTasks.value,
+                    onCheckedChange = {
+                        Controller.showArchivedTasks.value = it
+                    },
+                    colors = CheckboxDefaults.colors(
+                        uncheckedColor = Color.White
+                    )
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = "Show archived tasks", fontSize = 25.sp, color = Color.White)
+            }
         }
     }
 }

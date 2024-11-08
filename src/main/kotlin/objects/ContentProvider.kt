@@ -9,6 +9,9 @@ import setDeadlineFromString
 class ContentProvider {
     val tasks = mutableStateOf<List<TaskModel>>(listOf())
     val homeHeaders = mutableStateListOf("Title", "Category", "Description", "Deadline", "State", "Status")
+    val atRiskTaskNotificationTracker = mutableStateListOf<String>()
+    val overdueTaskNotificationTracker = mutableStateListOf<String>()
+    val taskUpdater = mutableStateOf(0)
 }
 
 //TaskModel().apply {

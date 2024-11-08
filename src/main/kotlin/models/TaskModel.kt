@@ -78,9 +78,20 @@ data class TaskModel(
         val totalDays = (deadline - createdAt) / MILLIS_PER_DAY
         if (totalDays <= 0) return null
 
-        if(progress >=1f) return 0f
-        return (1.0f / totalDays)
+        // Calculate remaining progress if task is already partially complete
+        val remainingProgress = 1.0f - progress
+        return remainingProgress / totalDays
     }
+
+//    fun getRequiredDailyProgress(): Float? {
+//        val deadline = deadline ?: return null
+//
+//        val totalDays = (deadline - createdAt) / MILLIS_PER_DAY
+//        if (totalDays <= 0) return null
+//
+//        if(progress >=1f) return 0f
+//        return (1.0f / totalDays)
+//    }
 
     /**
      * Calculates how many days behind schedule the task is
@@ -94,6 +105,18 @@ data class TaskModel(
         val totalDays = (deadline - createdAt) / MILLIS_PER_DAY.toFloat()
         val progressDifference = expectedProgress - progress
         return (progressDifference * totalDays)
+    }
+
+    fun getDaysOverdue(): Float? {
+        // Check if there is a deadline and if the task is overdue
+        val deadline = deadline ?: return null
+        val now = System.currentTimeMillis()
+
+        // If the current time is before or equal to the deadline, the task is not overdue
+        if (now <= deadline || state == State.COMPLETED) return null
+
+        // Calculate the number of days overdue
+        return ((now - deadline) / MILLIS_PER_DAY.toFloat())
     }
 
     fun calculateStatus(): String {

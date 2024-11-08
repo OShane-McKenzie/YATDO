@@ -1,10 +1,7 @@
 package objects
 
 import contentProvider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import models.TaskModel
 import models.TaskPath
 
@@ -16,12 +13,14 @@ class ContentRepository(private val database:Database) {
             contentProvider.tasks.value = it
         }
     }
+
     fun runInit(callBack:()->Unit={}){
         getTasks {
             contentProvider.tasks.value = it
             callBack.invoke()
         }
     }
+
     fun getTasks(failure: (Throwable) -> Unit = {}, success:(MutableList<TaskModel>) -> Unit = {}){
         repositoryScope.launch {
             val allTasks = database.getAllTasks(taskPath = TaskPath(path = Path.database))
@@ -72,6 +71,17 @@ class ContentRepository(private val database:Database) {
                 .onFailure {
                     failure.invoke(it)
                 }
+        }
+    }
+
+    fun taskEmitter(){
+        repositoryScope.launch {
+            while (true){
+                mainScope.launch {
+                    contentProvider.taskUpdater.value++
+                }
+                delay(300000)
+            }
         }
     }
 }

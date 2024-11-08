@@ -27,10 +27,7 @@ import ifNull
 import kotlinx.coroutines.delay
 import models.TaskModel
 import models.TaskPath
-import objects.AnimationStyle
-import objects.CreationType
-import objects.Path
-import objects.YatdoDataTypes
+import objects.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -41,9 +38,7 @@ fun Home(modifier: Modifier = Modifier){
     var creationType by rememberSaveable{
         mutableStateOf(CreationType.CREATE)
     }
-    var showArchivedTasks by rememberSaveable{
-        mutableStateOf(true)
-    }
+
     var showDeleteTaskDialog by remember {
         mutableStateOf(false)
     }
@@ -76,6 +71,9 @@ fun Home(modifier: Modifier = Modifier){
         filteredTasks = emptyList()
         delay(20)
         filteredTasks = contentProvider.tasks.value
+    }
+    LaunchedEffect(true){
+        contentRepository.taskEmitter()
     }
     Box(modifier = Modifier){
         Column(
@@ -154,7 +152,7 @@ fun Home(modifier: Modifier = Modifier){
                                             val tasks = contentProvider.tasks.value.toMutableList()
                                             tasks.add(it)
                                             contentProvider.tasks.value = tasks.toList()
-                                            contentRepository.updateTask(
+                                            contentRepository.createTask(
                                                 taskPath = TaskPath(
                                                     it.id,
                                                     path = Path.database
@@ -167,13 +165,13 @@ fun Home(modifier: Modifier = Modifier){
                                 selectedTask = it
                                 showDeleteTaskDialog = true
                             },
-                            showArchivedTask = showArchivedTasks
+                            showArchivedTask = Controller.showArchivedTasks.value
                         ) {
                             creationType = CreationType.EDIT
                             selectedTask = it
                             showTaskCreator = true
                         }
-                        Spacer(modifier = Modifier.height(8.dp))
+                        //Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
 
@@ -196,7 +194,7 @@ fun Home(modifier: Modifier = Modifier){
             modifier = Modifier.align(Alignment.TopStart)
         ) {
             NavigationMenu(
-                modifier = Modifier.align(Alignment.TopStart). fillMaxWidth(0.3f).fillMaxHeight()
+                modifier = Modifier.align(Alignment.TopStart). fillMaxWidth(0.3f).fillMaxHeight(),
             ) {
                 filterText = it
             }
