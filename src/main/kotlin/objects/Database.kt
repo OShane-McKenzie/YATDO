@@ -1,5 +1,6 @@
 package objects
 
+import contentProvider
 import deleteFile
 import exists
 import getCurrentDateTime
@@ -8,6 +9,7 @@ import ifNotNull
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import listFilesAndDirectories
+import models.Config
 import models.FileListOptions
 import models.TaskModel
 import models.TaskPath
@@ -19,6 +21,22 @@ import java.io.File
 object Database: DataSource {
     private val tasks: MutableList<TaskModel> = emptyList<TaskModel>().toMutableList()
 
+    fun getConfig():Result<Config>{
+        return try {
+            val config = readFile(Path.generalConfig)
+            var configModel = Config()
+            config.ifNotEmpty { json ->
+                val cf = Json.decodeFromString<Config>(json)
+                configModel = cf
+                yatDoLog(operation = "getConfig", outcome = "Success", exitCode = "0", message = "Config loaded")
+            }
+            Result.success(configModel)
+        }catch (e: Exception){
+            yatDoLog(operation = "getConfig", outcome = "Failure", exitCode = "1", message = "Failed to load config: ${e.message}")
+            Result.failure(e)
+        }
+
+    }
     override fun getAllTasks(taskPath: TaskPath): Result<MutableList<TaskModel>> {
         return try {
             val tasksNames = listFilesAndDirectories(taskPath.path, options = FileListOptions(fileExtensions = listOf("json", "JSON")))
@@ -107,6 +125,17 @@ object Database: DataSource {
         }
     }
 
+    fun updateConfig(config: Config): Result<Config> {
+        return try {
+            writeFile(Path.generalConfig, Json.encodeToString(config), append = false)
+            yatDoLog(operation = "updateConfig", outcome = "Success", exitCode = "0", message = "Config updated")
+            Result.success(config)
+        } catch (e: Exception) {
+            yatDoLog(operation = "updateConfig", outcome = "Failure", exitCode = "1", message = e.message ?: "Unknown error")
+            Result.failure(e)
+        }
+    }
+
     override fun deleteTask(taskPath: TaskPath): Result<Boolean> {
         return try {
             val taskFile = "${taskPath.path}/${taskPath.id}.json"
@@ -130,7 +159,7 @@ object Database: DataSource {
         return tasks
     }
 
-    fun backupDatabase(): Result<Unit> {
+    fun backupDatabase(): Result<String> {
         return try {
             val sourceDir = File(Path.database)
             val backupDir = File(Path.backup)
@@ -160,7 +189,7 @@ object Database: DataSource {
                 exitCode = "0",
                 message = "Database backed up successfully to ${timestampedBackupDir.absolutePath}"
             )
-            Result.success(Unit)
+            Result.success("Database backed up successfully to ${timestampedBackupDir.absolutePath}")
         } catch (e: Exception) {
             yatDoLog(
                 operation = "backupDatabase",
@@ -202,6 +231,5 @@ object Database: DataSource {
             Result.failure(e)
         }
     }
-
 
 }

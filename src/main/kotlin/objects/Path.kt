@@ -1,5 +1,7 @@
 package objects
 
+import exists
+import writeFile
 import java.io.File
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -15,13 +17,14 @@ object Path {
     val backup:String = "$data/backup"
 
     //files
-    val generalConfig:String = "$config/general.json"
+    val generalConfig:String = "$config/config.json"
     val logFile:String = "$logs/logs.csv"
 
 
     // Initializer
     init {
         createDirectories(workingDir, config, logs, data, database, backup)
+        createFiles(generalConfig, logFile)
     }
 
     private fun createDirectories(vararg dirs: String) {
@@ -33,6 +36,19 @@ object Path {
                 } else {
                     println("Failed to create directory: $dir")
                 }
+            }
+        }
+    }
+
+    private fun createFiles(vararg files: String){
+        files.forEach {
+            if(!exists(it)) {
+                if(it.endsWith("logs.csv")){
+                    writeFile(it, content = "Timestamp,Operation,Outcome,ExitCode,Message\n", append = false)
+                }else{
+                    writeFile(it, content = "{\"loadArchive\":false,\"tray\":false}", append = false)
+                }
+
             }
         }
     }

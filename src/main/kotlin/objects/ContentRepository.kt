@@ -2,6 +2,7 @@ package objects
 
 import contentProvider
 import kotlinx.coroutines.*
+import models.Config
 import models.TaskModel
 import models.TaskPath
 
@@ -9,16 +10,30 @@ class ContentRepository(private val database:Database) {
     val repositoryScope = CoroutineScope(SupervisorJob()+Dispatchers.IO)
     val mainScope  = CoroutineScope(Dispatchers.Main)
     init {
-        getTasks {
-            contentProvider.tasks.value = it
-        }
+//        getTasks {
+//            contentProvider.tasks.value = it
+//        }
     }
 
     fun runInit(callBack:()->Unit={}){
-        getTasks {
-            contentProvider.tasks.value = it
-            callBack.invoke()
-        }
+        database.getConfig()
+            .onSuccess { config ->
+                contentProvider.config.value = config
+                getTasks { tasks ->
+                    if(!config.loadArchive){
+                        contentProvider.tasks.value = tasks.filter { !it.isArchived }
+                    }else{
+                        contentProvider.tasks.value = tasks
+                    }
+                    callBack.invoke()
+                }
+            }
+            .onFailure {
+                getTasks {
+                    contentProvider.tasks.value = it
+                    callBack.invoke()
+                }
+            }
     }
 
     fun getTasks(failure: (Throwable) -> Unit = {}, success:(MutableList<TaskModel>) -> Unit = {}){
@@ -86,5 +101,12 @@ class ContentRepository(private val database:Database) {
                 delay(300000)
             }
         }
+    }
+    fun backUpDatabase():Result<String> = database.backupDatabase()
+
+    fun updateConfig():Result<Config> = database.updateConfig(contentProvider.config.value)
+
+    fun restoreFromBackup(backUp:String):Result<Boolean>{
+        return database.restoreDatabaseFromBackup(backUp)
     }
 }

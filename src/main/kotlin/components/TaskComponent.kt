@@ -61,7 +61,7 @@ fun TaskComponent(
         mutableStateOf("")
     }
     val scope = rememberCoroutineScope()
-
+    var checkForNotification by rememberSaveable { mutableStateOf(0) }
     LaunchedEffect(Unit, taskStateChange){
         if(taskStateChange == Int.MAX_VALUE-1) taskStateChange = 1
         if(derivedTask.isArchived) {
@@ -96,7 +96,7 @@ fun TaskComponent(
             }
             else -> {
                 when(derivedTask.status){
-                    Status.AT_RISK ->{Color(0xffdf8c31)}
+                    Status.AT_RISK ->{Color(0xffda6c38)}
                     Status.OVERDUE ->{Color.Red}
                     Status.ON_TRACK ->{Color.Blue}
                     else ->{Color.Blue}
@@ -111,9 +111,10 @@ fun TaskComponent(
         if(taskStateChange>0){
             onInlineEdit.invoke(derivedTask)
         }
+        checkForNotification++
     }
 
-    LaunchedEffect(true){
+    LaunchedEffect(checkForNotification){
         if(derivedTask.state == State.PAUSED){
             return@LaunchedEffect
         }
@@ -208,6 +209,14 @@ fun TaskComponent(
                         Text(derivedTask.title, fontSize = 25.sp, fontWeight = FontWeight.Bold,modifier = Modifier.basicMarquee())
                         if(derivedTask.status == Status.AT_RISK && isTaskBarExpanded) {
                             Text("${derivedTask.title} is due ${derivedTask.deadline?.getDateAsString(includeTime = true)}\nand is at risk of becoming overdue at the current rate.",
+                                color = progressColor, fontSize = 21.sp, fontWeight = FontWeight.Bold)
+                        }
+                        if(derivedTask.status == Status.OVERDUE && isTaskBarExpanded) {
+                            Text("${derivedTask.title} is now overdue ${
+                                derivedTask.deadline?.getDateAsString(
+                                    includeTime = true
+                                )
+                            }\nand is ${derivedTask.getDaysBehindSchedule()} days behind schedule.",
                                 color = progressColor, fontSize = 21.sp, fontWeight = FontWeight.Bold)
                         }
                     }
