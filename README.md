@@ -1,6 +1,6 @@
 # YATDO - Yet Another TODO App
 
-YATDO (Yet Another TODO App) is a Kotlin-based Linux desktop application designed to help users manage and organize tasks effectively. This app offers robust features for task management, including task creation, editing, categorization, prioritization, and scheduling, along with custom notifications and a sleek user interface.
+YATDO (Yet Another TODO App) is a Kotlin-based Linux desktop application build with Compose for desktop designed to help users manage and organize tasks effectively. This app offers robust features for task management, including task creation, editing, categorization, prioritization, and scheduling, along with custom notifications and a sleek user interface.
 
 ## Features
 
