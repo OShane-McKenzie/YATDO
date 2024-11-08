@@ -7,11 +7,12 @@ object Path {
 
     // Dirs
     val home: String = System.getProperty("user.home")
-    val workingDir = "$home/YATDO"
+    val workingDir = "$home/.YATDO"
     val config:String = "$workingDir/config"
     val logs:String = "$workingDir/logs"
     val data:String = "$workingDir/data"
     val database:String = "$data/database"
+    val backup:String = "$data/backup"
 
     //files
     val generalConfig:String = "$config/general.json"
@@ -20,7 +21,7 @@ object Path {
 
     // Initializer
     init {
-        createDirectories(workingDir, config, logs, data, database)
+        createDirectories(workingDir, config, logs, data, database, backup)
     }
 
     private fun createDirectories(vararg dirs: String) {

@@ -282,14 +282,22 @@ fun generateUniqueID(dataSet: List<Any>, length: Int = 8, prefix: String = "$app
     return randomID
 }
 
+
 /**
- * Lists all files in the specified directory according to the given options
+ * Lists all files and/or directories in the specified directory according to the given options
  * @param directoryPath Path to the directory
- * @param options Configuration options for listing files
- * @return List of file names or null if directory doesn't exist
+ * @param options Configuration options for listing files and directories
+ * @return List of file/directory names or null if directory doesn't exist
  * @throws IllegalArgumentException if the path exists but is not a directory
  */
-fun listFiles(directoryPath: String, options: FileListOptions = FileListOptions()): List<String>? {
+fun listFilesAndDirectories(directoryPath: String, options: FileListOptions = FileListOptions()): List<String>? {
+    val directory = File(directoryPath)
+    if (!directory.exists()) {
+        return null
+    }
+    if (!directory.isDirectory) {
+        throw IllegalArgumentException("Path exists but is not a directory: $directoryPath")
+    }
     /**
      * Check if a file matches the configured extension filters
      */
@@ -310,23 +318,17 @@ fun listFiles(directoryPath: String, options: FileListOptions = FileListOptions(
             pattern.matches(file.name)
         }
     }
-
-    val directory = File(directoryPath)
-
-    if (!directory.exists()) {
-        return null
-    }
-
-    if (!directory.isDirectory) {
-        throw IllegalArgumentException("Path exists but is not a directory: $directoryPath")
-    }
-
     return directory.walkTopDown()
         .filter { file ->
             when {
                 // Apply directory filter
-                file.isDirectory -> options.includeDirectories && !isExcluded(file, options)
-
+                file.isDirectory -> {
+                    if (options.includeOnlyDirectories) {
+                        true
+                    } else {
+                        options.includeDirectories && !isExcluded(file, options)
+                    }
+                }
                 // Apply file filters
                 else -> !isExcluded(file, options) && matchesExtensions(file, options)
             }
@@ -338,5 +340,7 @@ fun listFiles(directoryPath: String, options: FileListOptions = FileListOptions(
         .map { it.name }
         .toList()
 }
+
+
 
 

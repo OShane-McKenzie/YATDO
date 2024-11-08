@@ -501,7 +501,7 @@ fun TaskComponent(
         ) {
             Column{
                 taskBody()
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(13.dp))
             }
         }
 
@@ -511,7 +511,7 @@ fun TaskComponent(
         ) {
             Column{
                 taskBody()
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(13.dp))
             }
         }
     }

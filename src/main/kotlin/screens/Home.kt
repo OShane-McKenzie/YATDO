@@ -75,11 +75,11 @@ fun Home(modifier: Modifier = Modifier){
     LaunchedEffect(true){
         contentRepository.taskEmitter()
     }
-    Box(modifier = Modifier){
+
+    Box(modifier = Modifier.fillMaxSize().background(color = Color(0xffc8c8c8)).padding(13.dp)){
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(0xffc8c8c8))
                 .padding(YatdoDataTypes.Fibonacci.EIGHT.dp),
         ) {
             Column(

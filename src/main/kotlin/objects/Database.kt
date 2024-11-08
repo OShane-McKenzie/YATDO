@@ -2,24 +2,26 @@ package objects
 
 import deleteFile
 import exists
+import getCurrentDateTime
 import ifNotEmpty
 import ifNotNull
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import listFiles
+import listFilesAndDirectories
 import models.FileListOptions
 import models.TaskModel
 import models.TaskPath
 import readFile
 import writeFile
 import yatDoLog
+import java.io.File
 
 object Database: DataSource {
     private val tasks: MutableList<TaskModel> = emptyList<TaskModel>().toMutableList()
 
     override fun getAllTasks(taskPath: TaskPath): Result<MutableList<TaskModel>> {
         return try {
-            val tasksNames = listFiles(taskPath.path, options = FileListOptions(fileExtensions = listOf("json", "JSON")))
+            val tasksNames = listFilesAndDirectories(taskPath.path, options = FileListOptions(fileExtensions = listOf("json", "JSON")))
             tasksNames.ifNotNull {
                 tasks.clear()
                 it.forEach { name ->
@@ -127,4 +129,79 @@ object Database: DataSource {
         yatDoLog(operation = "getCachedDatabase", outcome = "Success", exitCode = "0", message = "Retrieved cached tasks")
         return tasks
     }
+
+    fun backupDatabase(): Result<Unit> {
+        return try {
+            val sourceDir = File(Path.database)
+            val backupDir = File(Path.backup)
+
+            // Check if source directory exists
+            if (!sourceDir.exists() || !sourceDir.isDirectory) {
+                return Result.failure(Exception("Source database directory does not exist or is not a directory"))
+            }
+
+            // Create a timestamped backup subdirectory
+            val timestamp = getCurrentDateTime().replace(":", "-").replace(" ", "_")
+            val timestampedBackupDir = File("${backupDir.absolutePath}/backup_$timestamp")
+            timestampedBackupDir.mkdirs()
+
+            // Copy all files from the database directory to the timestamped backup directory
+            sourceDir.walkTopDown().forEach { file ->
+                if (file.isFile) {
+                    val targetFile = File("${timestampedBackupDir.absolutePath}/${file.name}")
+                    file.copyTo(targetFile, overwrite = true)
+                    println("File backed up: ${file.name}")
+                }
+            }
+
+            yatDoLog(
+                operation = "backupDatabase",
+                outcome = "Success",
+                exitCode = "0",
+                message = "Database backed up successfully to ${timestampedBackupDir.absolutePath}"
+            )
+            Result.success(Unit)
+        } catch (e: Exception) {
+            yatDoLog(
+                operation = "backupDatabase",
+                outcome = "Failure",
+                exitCode = "1",
+                message = e.message ?: "Unknown error during database backup"
+            )
+            Result.failure(e)
+        }
+    }
+
+    fun restoreDatabaseFromBackup(backupName: String): Result<Boolean> {
+        val backupFolder = "${Path.backup}/$backupName"
+        val databaseFolder = Path.database
+
+        return try {
+            val backupDirectory = File(backupFolder)
+            if (!backupDirectory.exists() || !backupDirectory.isDirectory) {
+                throw IllegalArgumentException("Backup folder '$backupName' does not exist or is not a directory")
+            }
+
+            // Clear the existing database folder
+            File(databaseFolder).deleteRecursively()
+            File(databaseFolder).mkdirs()
+
+            // Copy each file from the backup folder to the database folder
+            backupDirectory.walkTopDown().forEach { file ->
+                if (file.isFile) {
+                    val destination = File(databaseFolder, file.relativeTo(backupDirectory).path)
+                    destination.parentFile.mkdirs()
+                    file.copyTo(destination, overwrite = true)
+                }
+            }
+
+            yatDoLog(operation = "restoreDatabaseFromBackup", outcome = "Success", exitCode = "0", message = "Database restored from backup '$backupName'")
+            Result.success(true)
+        } catch (e: Exception) {
+            yatDoLog(operation = "restoreDatabaseFromBackup", outcome = "Failure", exitCode = "1", message = e.message ?: "Unknown error")
+            Result.failure(e)
+        }
+    }
+
+
 }

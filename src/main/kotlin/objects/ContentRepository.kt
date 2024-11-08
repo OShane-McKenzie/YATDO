@@ -36,6 +36,7 @@ class ContentRepository(private val database:Database) {
 
     fun createTask(taskPath: TaskPath, data: TaskModel, failure: (Throwable) -> Unit = {}, success:(TaskModel) -> Unit = {}){
         repositoryScope.launch {
+            database.backupDatabase()
             database.createTask(taskPath = taskPath, data = data)
                 .onSuccess {
                     success.invoke(it)
@@ -48,6 +49,7 @@ class ContentRepository(private val database:Database) {
 
     fun updateTask(taskPath: TaskPath, data: TaskModel, failure: (Throwable) -> Unit = {}, success:(TaskModel) -> Unit = {}){
         repositoryScope.launch {
+            //database.backupDatabase()
             database.updateTask(taskPath = taskPath, data = data)
                 .onSuccess {
                     success.invoke(it)
@@ -64,6 +66,7 @@ class ContentRepository(private val database:Database) {
         success:(Boolean) -> Unit = {}
     ){
         repositoryScope.launch {
+            database.backupDatabase()
             database.deleteTask(taskPath)
                 .onSuccess {
                     success.invoke(it)
