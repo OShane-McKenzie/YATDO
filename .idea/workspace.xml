@@ -5,22 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4ed1677f-4c7c-4217-a4ea-746b6fc64707" name="Changes" comment="various feature updates">
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/screenshots/home_screen.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/screenshots/home_screen2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/screenshots/home_screen3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/screenshots/task_creation.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/models/Config.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/components/NavigationMenu.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/components/NavigationMenu.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/components/TaskComponent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/components/TaskComponent.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/components/TaskCreator.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/components/TaskCreator.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/ContentProvider.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/ContentProvider.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/ContentRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/ContentRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/Controller.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/Controller.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/Database.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/Database.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/Path.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/Path.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,7 +144,23 @@
       <option name="project" value="LOCAL" />
       <updated>1731078679219</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="various feature updates">
+      <option name="closed" value="true" />
+      <created>1731102874772</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1731102874772</updated>
+    </task>
+    <task id="LOCAL-00006" summary="various feature updates">
+      <option name="closed" value="true" />
+      <created>1731103041847</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1731103041847</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

@@ -28,7 +28,7 @@ Form to create or edit tasks, with options to set priority, deadline, and catego
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/YATDO.git
+   git clone https://github.com/OShane-McKenzie/YATDO.git
    cd YATDO
    ```
 
