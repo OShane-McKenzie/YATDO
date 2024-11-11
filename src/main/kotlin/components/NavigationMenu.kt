@@ -109,7 +109,7 @@ fun NavigationMenu(modifier:Modifier = Modifier, onSearch:(String)->Unit={}){
                 Button(
                     onClick = {
                         contentRepository.repositoryScope.launch {
-                            contentRepository.backUpDatabase(customName.trim())
+                            contentRepository.backUpDatabase(customName.trim().ifEmpty { "Auto-" })
                                 .onSuccess {
                                     info = it
                                     showSnackBar = true

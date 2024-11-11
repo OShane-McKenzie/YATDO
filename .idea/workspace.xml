@@ -4,20 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4ed1677f-4c7c-4217-a4ea-746b6fc64707" name="Changes" comment="various feature updates">
-      <change afterPath="$PROJECT_DIR$/Last/home/lite/.YATDO/data/backup/backup_2024-11-11_17-15-18/YATDO-AwA4j7VG.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Last/home/lite/.YATDO/data/backup/backup_2024-11-11_17-15-18/YATDO-KVfKLPnb.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Last/home/lite/.YATDO/data/backup/backup_2024-11-11_17-15-18/YATDO-Tai7en4b.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Last/home/lite/.YATDO/data/backup/backup_2024-11-11_17-15-18/YATDO-WrDX5AcS.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Last/home/lite/.YATDO/data/backup/backup_2024-11-11_17-17-21/YATDO-AwA4j7VG.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Last/home/lite/.YATDO/data/backup/backup_2024-11-11_17-17-21/YATDO-KVfKLPnb.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Last/home/lite/.YATDO/data/backup/backup_2024-11-11_17-17-21/YATDO-Tai7en4b.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Last/home/lite/.YATDO/data/backup/backup_2024-11-11_17-17-21/YATDO-WrDX5AcS.json" afterDir="false" />
+    <list default="true" id="4ed1677f-4c7c-4217-a4ea-746b6fc64707" name="Changes" comment="Improved backup functionality">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/components/NavigationMenu.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/components/NavigationMenu.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/ContentRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/ContentRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/objects/Database.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/objects/Database.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,12 +168,21 @@
       <option name="project" value="LOCAL" />
       <updated>1731112002381</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Improved backup functionality">
+      <option name="closed" value="true" />
+      <created>1731365541689</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1731365541689</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="various feature updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="various feature updates" />
+    <MESSAGE value="Improved backup functionality" />
+    <option name="LAST_COMMIT_MESSAGE" value="Improved backup functionality" />
   </component>
 </project>
