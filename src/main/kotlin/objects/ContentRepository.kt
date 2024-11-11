@@ -102,7 +102,9 @@ class ContentRepository(private val database:Database) {
             }
         }
     }
-    fun backUpDatabase():Result<String> = database.backupDatabase()
+    fun backUpDatabase(name:String="Auto-"):Result<String> {
+        return database.backupDatabase(name)
+    }
 
     fun updateConfig():Result<Config> = database.updateConfig(contentProvider.config.value)
 

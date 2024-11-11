@@ -159,7 +159,7 @@ object Database: DataSource {
         return tasks
     }
 
-    fun backupDatabase(): Result<String> {
+    fun backupDatabase(name:String=""): Result<String> {
         return try {
             val sourceDir = File(Path.database)
             val backupDir = File(Path.backup)
@@ -171,7 +171,8 @@ object Database: DataSource {
 
             // Create a timestamped backup subdirectory
             val timestamp = getCurrentDateTime().replace(":", "-").replace(" ", "_")
-            val timestampedBackupDir = File("${backupDir.absolutePath}/backup_$timestamp")
+            val sanitizedName = name.replace(":", "-").replace(" ", "_")
+            val timestampedBackupDir = File("${backupDir.absolutePath}/${sanitizedName}Backup_$timestamp")
             timestampedBackupDir.mkdirs()
 
             // Copy all files from the database directory to the timestamped backup directory

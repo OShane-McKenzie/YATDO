@@ -17,20 +17,33 @@ import androidx.compose.ui.unit.sp
 import contentProvider
 import contentRepository
 import ifNotNull
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import listFilesAndDirectories
 import models.FileListOptions
 import objects.Controller
 import objects.Path
 import objects.YatdoDataTypes
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NavigationMenu(modifier:Modifier = Modifier, onSearch:(String)->Unit={}){
     val interactionSource = remember { MutableInteractionSource() }
     var showSnackBar by remember { mutableStateOf(false) }
     var info by remember { mutableStateOf("") }
-    val backups = remember { listFilesAndDirectories(Path.backup, options = FileListOptions(includeOnlyDirectories = true)) }
+    var backups by remember { mutableStateOf(listFilesAndDirectories(Path.backup, options = FileListOptions(includeOnlyDirectories = true))) }
     val scrollState = rememberScrollState()
+    var firstRun by remember { mutableStateOf(true) }
+
+    LaunchedEffect(backups){
+        if(!firstRun){
+            backups = listFilesAndDirectories(Path.backup, options = FileListOptions(includeOnlyDirectories = true))
+        }else{
+            firstRun = true
+        }
+    }
     Box(
         modifier = modifier
     ){
@@ -87,22 +100,56 @@ fun NavigationMenu(modifier:Modifier = Modifier, onSearch:(String)->Unit={}){
                 Text(text = "Show archived tasks", fontSize = 25.sp, color = Color.White)
             }
 
-            Button(
-                onClick = {
-                    contentRepository.repositoryScope.launch {
-                        contentRepository.backUpDatabase()
-                            .onSuccess {
-                                info = it
-                                showSnackBar = true
-                            }
-                            .onFailure {
-                                info = "Error: ${it.message}"
-                                showSnackBar = true
-                            }
-                    }
-                }
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ){
-                Text(text = "Backup Database", fontSize = 25.sp, color = Color.White)
+                var customName by remember { mutableStateOf("") }
+                Button(
+                    onClick = {
+                        contentRepository.repositoryScope.launch {
+                            contentRepository.backUpDatabase(customName.trim())
+                                .onSuccess {
+                                    info = it
+                                    showSnackBar = true
+                                    contentRepository.repositoryScope.launch {
+                                        withContext(Dispatchers.Main){
+                                            backups = emptyList()
+                                        }
+                                        delay(20)
+                                        withContext(Dispatchers.Main){
+                                            backups = listFilesAndDirectories(Path.backup, options = FileListOptions(includeOnlyDirectories = true))
+                                        }
+                                    }
+                                }
+                                .onFailure {
+                                    info = "Error: ${it.message}"
+                                    showSnackBar = true
+                                }
+                            customName = ""
+                        }
+                    }
+                ) {
+                    Text(text = "Backup Database", fontSize = 25.sp, color = Color.White)
+                }
+
+                OutlinedTextField(
+                    value = customName,
+                    onValueChange = {
+                        customName = it
+                    },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = Color.White,
+                        unfocusedBorderColor = Color.Gray,
+                        focusedBorderColor = Color.White
+                    ),
+                    textStyle = LocalTextStyle.current.copy(
+                        fontSize = 25.sp
+                    ),
+                    placeholder = { Text("Add custom name", fontSize = 25.sp, color = Color.White) },
+                    modifier = Modifier.fillMaxWidth(0.7f).height(60.dp)
+                )
             }
 
             Column(
@@ -204,7 +251,7 @@ fun NavigationMenu(modifier:Modifier = Modifier, onSearch:(String)->Unit={}){
                 Spacer(modifier = Modifier.height(5.dp))
                 backups.ifNotNull { dirs ->
                     dirs.sortedBy { it }.forEach{ dir ->
-                        Text(text = dir, fontSize = 30.sp, color = Color.White, modifier = Modifier.clickable {
+                        Text(text = dir, fontSize = 30.sp, color = Color.White, modifier = Modifier.basicMarquee().clickable {
                             contentRepository.repositoryScope.launch {
                                 contentRepository.restoreFromBackup(dir)
                                     .onSuccess {
@@ -233,6 +280,7 @@ fun NavigationMenu(modifier:Modifier = Modifier, onSearch:(String)->Unit={}){
             CustomSnackBar(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 info = info,
+                duration = 12000L,
                 isVisible = true
             ) {
                 showSnackBar = false
